@@ -46,9 +46,9 @@ func init() {
 // Define routes
 func init() {
 	mux.Get("/", http.HandlerFunc(handlers.GetIndex))
-	mux.Post("/user", http.HandlerFunc(handlers.PostUser)) // Create new user
-	mux.Put("/subdomain", http.HandlerFunc(handlers.PostSubdomain))
-	mux.Post("/subdomain", http.HandlerFunc(handlers.PostSubdomain))
+	mux.Post("/users/new", http.HandlerFunc(handlers.PostUser))
+	mux.Post("/subdomains/new", http.HandlerFunc(handlers.PostSubdomain))
+	// mux.Put("/subdomain", http.HandlerFunc(handlers.PostSubdomain))
 	// mux.Post("/", http.HandlerFunc(handlers.PayPalCallback))
 	// mux.Post("/token", http.HandlerFunc(handlers.PostToken))
 	
