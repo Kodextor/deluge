@@ -17,7 +17,8 @@ instance for future API calls.
 
 ### Associate User with New Subdomain
 
-    $ curl -X POST -d '{"username":"some_new_user","subdomain":"mysubdomain","token":"0ce7d54d-33ac-4911-5105-9d6b6a9b8230"}' \
+    $ curl -X POST -d \
+    '{"username":"some_new_user","subdomain":"mysubdomain","token":"0ce7d54d-33ac-4911-5105-9d6b6a9b8230"}' \
     http://localhost:9090/subdomains/new
 
 
