@@ -58,4 +58,8 @@ Type `mongo deluged` at the command line to enter the MongoDB shell
 
 * Decide whether to allow for multiple Genesis instances that are each routed to
 
+* Replace relative imports with absolute
+
+  * E.g., replace `"./handlers"` with `"github.com/cznweb/deluge/handlers"`
+
 * Add to TODO :-)
