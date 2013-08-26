@@ -62,12 +62,12 @@ func main() {
 
 	addr, err := net.ResolveTCPAddr("tcp", *localAddr)
 	if err != nil {
-		log.Fatalf("Error: %v\n", err)
+		log.Fatalf("net.ResolveTCPAddr() -- %v\n", err)
 	}
 
 	listener, err := net.ListenTCP("tcp", addr)
 	if err != nil {
-		log.Fatalf("Error: %v\n", err)
+		log.Fatalf("net.ListenTCP() -- %v\n", err)
 	}
 
 	pending := make(chan *net.TCPConn)
