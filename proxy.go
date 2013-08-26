@@ -70,7 +70,7 @@ func main() {
 		log.Fatalf("net.ListenTCP() -- %v\n", err)
 	}
 
-	pending := make(chan *net.TCPConn)
+	incoming := make(chan *net.TCPConn)
 	go func() {
 		for {
 			go func(conn *net.TCPConn) {
@@ -79,7 +79,7 @@ func main() {
 				if err := proxyConn(conn); err != nil {
 					fmt.Printf("proxyConn: %v\n", err)
 				}
-			}(<-pending)
+			}(<-incoming)
 		}
 	}()
 
@@ -89,7 +89,7 @@ func main() {
 			log.Printf("listener.AcceptTCP() -- %v\n", err)
 			continue
 		}
-		pending <- conn
+		incoming <- conn
 	}
 }
 
