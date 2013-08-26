@@ -94,7 +94,7 @@ func main() {
 }
 
 func copy(w, r net.Conn, name string, errc chan error) {
-	n, err := io.Copy(w, r)
+	_, err := io.Copy(w, r)
 	errc <- err
-	fmt.Printf("%s: copied %d bytes\n", name, n)
+	// fmt.Printf("%s: copied %d bytes\n", name, n)
 }
