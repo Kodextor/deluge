@@ -27,22 +27,31 @@ func proxyConn(conn *net.TCPConn) error {
 	}
 	defer rConn.Close()
 
-	errc := make(chan error)
+	l2r := make(chan error)
+	r2l := make(chan error)
 
-	go copier(rConn, conn, "Local to Remote", errc)
-	go copier(conn, rConn, "Remote to Local", errc)
+	go copier(rConn, conn, "Local to Remote", l2r)
+	go copier(conn, rConn, "Remote to Local", r2l)
 
-	err1, err2 := <-errc, <-errc
-	if err1 != nil {
-		return err1
+	// Once one direction of copying fails, close both connections and
+	// return
+
+	select {
+	case err = <-r2l:
+		// fmt.Printf("r2l == %v\n", err)
+		go func() {
+			err = <-l2r
+			// fmt.Printf("Latent l2r: %v\n", err)
+		}()
+	case err = <-l2r:
+		// fmt.Printf("l2r == %v\n", err)
+		go func() {
+			err = <-r2l
+			// fmt.Printf("Latent r2l: %v\n", err)
+		}()
 	}
-	return err2
-}
 
-func handleConn(in <-chan *net.TCPConn) {
-	for conn := range in {
-		proxyConn(conn)
-	}
+	return err
 }
 
 func main() {
@@ -62,9 +71,17 @@ func main() {
 	}
 
 	pending := make(chan *net.TCPConn)
-	for i := 0; i < 5; i++ {
-		go handleConn(pending)
-	}
+	go func() {
+		for {
+			go func(conn *net.TCPConn) {
+				log.Printf("New connection: %s <--> %s\n", conn.LocalAddr(),
+					conn.RemoteAddr())
+				if err := proxyConn(conn); err != nil {
+					fmt.Printf("proxyConn: %v\n", err)
+				}
+			}(<-pending)
+		}
+	}()
 
 	for {
 		conn, err := listener.AcceptTCP()
