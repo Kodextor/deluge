@@ -30,8 +30,8 @@ func proxyConn(conn *net.TCPConn) error {
 	l2r := make(chan error)
 	r2l := make(chan error)
 
-	go copier(rConn, conn, "Local to Remote", l2r)
-	go copier(conn, rConn, "Remote to Local", r2l)
+	go copy(rConn, conn, "Local to Remote", l2r)
+	go copy(conn, rConn, "Remote to Local", r2l)
 
 	// Once one direction of copying fails, close both connections and
 	// return
@@ -93,7 +93,7 @@ func main() {
 	}
 }
 
-func copier(w, r net.Conn, name string, errc chan error) {
+func copy(w, r net.Conn, name string, errc chan error) {
 	n, err := io.Copy(w, r)
 	errc <- err
 	fmt.Printf("%s: copied %d bytes\n", name, n)
