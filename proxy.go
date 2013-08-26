@@ -38,16 +38,16 @@ func proxyConn(conn *net.TCPConn) error {
 
 	select {
 	case err = <-r2l:
-		// fmt.Printf("r2l == %v\n", err)
+		// fmt.Printf("From r2l: %v\n", err)
 		go func() {
 			err = <-l2r
-			// fmt.Printf("Latent l2r: %v\n", err)
+			// fmt.Printf("Latent l2r error: %v\n", err)
 		}()
 	case err = <-l2r:
-		// fmt.Printf("l2r == %v\n", err)
+		// fmt.Printf("From l2r: %v\n", err)
 		go func() {
 			err = <-r2l
-			// fmt.Printf("Latent r2l: %v\n", err)
+			// fmt.Printf("Latent r2l error: %v\n", err)
 		}()
 	}
 
